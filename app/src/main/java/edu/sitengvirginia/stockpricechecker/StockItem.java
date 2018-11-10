@@ -8,45 +8,35 @@ import java.util.Date;
 
 public class StockItem implements Serializable{
     private String mname;
-    private String mdescription;
-    private String mlatitude;
-    private String mlongitude;
-    private String mdate;
+    private String mcurrentprice;
+    private String mtodaylow;
+    private String mtodayhigh;
     private boolean mchecked;
 
-    private StockItem(String name, String description, String latitiude, String longitude, String date, boolean checked) {
+    private StockItem(String name, String currentprice, String todaylow, String todayhigh, boolean checked) {
         mname = name;
-        mdescription = description;
-        mlatitude = latitiude;
-        mlongitude = longitude;
-        mdate = date;
+        mcurrentprice = currentprice;
+        mtodayhigh = todayhigh;
+        mtodaylow = todaylow;
         mchecked = checked;
     }
 
-    public static StockItem createStockItem(String name, String description, String latitude, String longitude, String date, boolean checked) {
-        StockItem b = new StockItem(name, description, latitude, longitude, date, checked);
-        return b;
-    }
-
-    public static StockItem editStockItem(StockItem b, String name, String description, String latitude, String longitude, String date, boolean checked) {
-        b = new StockItem(name, description, latitude, longitude, date, checked);
+    public static StockItem createStockItem(String name, String currentprice, String todaylow, String todayhigh, boolean checked) {
+        StockItem b = new StockItem(name, currentprice, todaylow, todayhigh, checked);
         return b;
     }
 
     public String getMname() {
         return mname;
     }
-    public String getMdescription() {
-        return mdescription;
+    public String getMcurrentprice() {
+        return mcurrentprice;
     }
-    public String getMlatitude() {
-        return mlatitude;
+    public String getMtodaylow() {
+        return mtodaylow;
     }
-    public String getMlongitude() {
-        return mlongitude;
-    }
-    public String getMdate() {
-        return mdate;
+    public String getMtodayhigh() {
+        return mtodayhigh;
     }
     public void setMchecked(boolean val){this.mchecked=val; }
 
@@ -57,11 +47,11 @@ public class StockItem implements Serializable{
 
     public static ArrayList<StockItem> createInitialBucketList() {
         ArrayList<StockItem> initialList = new ArrayList<StockItem>();
-        initialList.add(new StockItem("Last Year", "whatever", "37.3", "38.4", "2017/7/27", false));
+        initialList.add(new StockItem("Apple", "230", "225", "240", false));
 
-        initialList.add(new StockItem("Last Year2", "whatever", "37.3", "38.4", "2018/8/27", false));
+        initialList.add(new StockItem("IBM", "100", "99", "101", false));
 
-        initialList.add(new StockItem("Last Year3", "whatever", "37.3", "38.4", "2018/10/27", false));
+        initialList.add(new StockItem("Tesla", "350", "320", "360", false));
 
         return initialList;
     }

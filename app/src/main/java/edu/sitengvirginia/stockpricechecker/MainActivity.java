@@ -60,11 +60,10 @@ public class MainActivity extends AppCompatActivity{
             if (resultCode == RESULT_OK) {
                 String name = data.getStringExtra("name");
                 Log.e("test", name);
-                String description = data.getStringExtra("description");
-                String latitude = data.getStringExtra("latitude");
-                String longitude = data.getStringExtra("longitude");
-                String date = data.getStringExtra("date");
-                StockItem b = StockItem.createStockItem(name, description, latitude, longitude,date, false);
+                String currentprice = data.getStringExtra("currentprice");
+                String todaylow = data.getStringExtra("todaylow");
+                String todayhigh = data.getStringExtra("todayhigh");
+                StockItem b = StockItem.createStockItem(name, currentprice, todaylow, todayhigh,false);
 
 
                 myList.add(b);
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity{
                 adapter.notifyDataSetChanged();
             }
         }
-        if (requestCode == 2) {
+        /*if (requestCode == 2) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
 
@@ -93,7 +92,7 @@ public class MainActivity extends AppCompatActivity{
                 adapter.notifyDataSetChanged();
             }
         }
-
+        */
     }
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {

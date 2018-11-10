@@ -29,7 +29,9 @@ public class StockListAdapter extends
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         public TextView nameTextView;
-        public TextView dateTextView;
+        public TextView priceTextView;
+        public TextView lowTextView;
+        public TextView highTextView;
         public CheckBox checkbox;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
@@ -39,8 +41,9 @@ public class StockListAdapter extends
             super(itemView);
             checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
             nameTextView = (TextView) itemView.findViewById(R.id.StockItemName);
-            dateTextView = (TextView) itemView.findViewById(R.id.StockItemDate);
-
+            priceTextView = (TextView) itemView.findViewById(R.id.StockItemPrice);
+            lowTextView = (TextView) itemView.findViewById(R.id.StockItemTodayLow);
+            highTextView = (TextView) itemView.findViewById(R.id.StockItemTodayHigh);
         }
     }
 
@@ -83,12 +86,20 @@ public class StockListAdapter extends
 
         // Set item views based on your views and data model
         TextView textView = viewHolder.nameTextView;
-        String bucketDisplay = bucket.getMname();
-        textView.setText(bucketDisplay);
+        String nameDisplay = bucket.getMname();
+        textView.setText(nameDisplay);
 
-        TextView dateView = viewHolder.dateTextView;
-        String dateDisplay = bucket.getMdate();
-        dateView.setText(dateDisplay);
+        TextView currentpriceView = viewHolder.priceTextView;
+        String priceDisplay = "Current Price: " + bucket.getMcurrentprice();
+        currentpriceView.setText(priceDisplay);
+
+        TextView lowView = viewHolder.lowTextView;
+        String lowDisplay = " Today's low: " + bucket.getMtodaylow();
+        lowView.setText(lowDisplay);
+
+        TextView highView = viewHolder.highTextView;
+        String highDisplay = " Today's High: " + bucket.getMtodayhigh();
+        highView.setText(highDisplay);
 
         final CheckBox complete = viewHolder.checkbox;
         complete.setChecked(bucket.getMchecked());

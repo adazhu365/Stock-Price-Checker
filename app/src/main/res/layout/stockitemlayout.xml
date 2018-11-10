@@ -16,16 +16,33 @@
 
     <TextView
         android:id="@+id/StockItemName"
-        android:textSize="24sp"
+        android:textSize="20sp"
         app:layout_constraintLeft_toRightOf="@+id/checkbox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
     <TextView
-        android:id="@+id/StockItemDate"
-        android:textSize="15sp"
+        android:id="@+id/StockItemPrice"
+        android:textSize="20sp"
         app:layout_constraintTop_toBottomOf="@+id/StockItemName"
         app:layout_constraintLeft_toRightOf="@+id/checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:id="@+id/StockItemTodayLow"
+        android:textSize="20sp"
+        app:layout_constraintLeft_toRightOf="@+id/StockItemPrice"
+        android:gravity="right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    <TextView
+        android:id="@+id/StockItemTodayHigh"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@+id/StockItemTodayLow"
+        app:layout_constraintLeft_toRightOf="@+id/StockItemPrice"
+        android:gravity="right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
