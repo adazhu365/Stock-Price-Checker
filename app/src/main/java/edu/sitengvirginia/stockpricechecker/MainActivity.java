@@ -11,16 +11,23 @@ import android.view.View;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.content.Intent;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity{
 
-    //private FloatingActionButton myButton;
+    private Button myButton;
+    private Button myaddButton;
+    private TextView myfavorite;
     RecyclerView rvItems;
     ArrayList<StockItem> myList;
     private Snackbar snackbar;
     static final int req_code = 1;
     StockListAdapter adapter;
+    private EditText stockName;
 
 
     @Override
@@ -36,7 +43,13 @@ public class MainActivity extends AppCompatActivity{
             myList = (ArrayList<StockItem>) mylist;
         }
 
-        //myButton = findViewById(R.id.button);
+        myButton = findViewById(R.id.button);
+        myButton.setText("Detailed Info");
+        myaddButton = findViewById(R.id.addbutton);
+        myaddButton.setText("Add Stock to Favorite");
+        myfavorite = findViewById(R.id.favorite);
+        myfavorite.setText("Favorite");
+        stockName = findViewById(R.id.nameinput);
         /*myButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

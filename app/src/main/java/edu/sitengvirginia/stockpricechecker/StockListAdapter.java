@@ -94,7 +94,7 @@ public class StockListAdapter extends
         currentpriceView.setText(priceDisplay);
 
         TextView lowView = viewHolder.lowTextView;
-        String lowDisplay = " Today's low: " + bucket.getMtodaylow();
+        String lowDisplay = " Today's Low: " + bucket.getMtodaylow();
         lowView.setText(lowDisplay);
 
         TextView highView = viewHolder.highTextView;
