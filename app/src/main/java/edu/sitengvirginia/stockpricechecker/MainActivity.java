@@ -7,13 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
-import android.view.View;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.content.Intent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
+
 
 import java.util.ArrayList;
 
@@ -28,7 +29,7 @@ public class MainActivity extends AppCompatActivity{
     static final int req_code = 1;
     StockListAdapter adapter;
     private EditText stockName;
-
+    private ImageButton settingButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,15 +51,17 @@ public class MainActivity extends AppCompatActivity{
         myfavorite = findViewById(R.id.favorite);
         myfavorite.setText("Favorite");
         stockName = findViewById(R.id.nameinput);
-        /*myButton.setOnClickListener(new View.OnClickListener() {
+
+        settingButton = findViewById(R.id.settingbutton);
+        settingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Intent add_intent = new Intent(MainActivity.this, AddItemActivity.class);
+                Intent add_intent = new Intent(MainActivity.this, SettingActivity.class);
                 startActivityForResult(add_intent, req_code);
             }
         });
-        */
+
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         adapter = new StockListAdapter(this, myList);
         rvItems.setAdapter(adapter);
