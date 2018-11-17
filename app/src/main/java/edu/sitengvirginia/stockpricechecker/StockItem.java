@@ -13,11 +13,12 @@ public class StockItem implements Serializable{
     private String mtodayhigh;
     private boolean mchecked;
 
-    private StockItem(String name, String currentprice, String todaylow, String todayhigh, boolean checked) {
+
+    private StockItem(String name, String currentprice, String low, String high, boolean checked) {
         mname = name;
         mcurrentprice = currentprice;
-        mtodayhigh = todayhigh;
-        mtodaylow = todaylow;
+        mtodayhigh = high;
+        mtodaylow = low;
         mchecked = checked;
     }
 
@@ -26,18 +27,35 @@ public class StockItem implements Serializable{
         return b;
     }
 
+
     public String getMname() {
         return mname;
     }
+    public void setMname(String mname) {
+        this.mname = mname;
+    }
+
     public String getMcurrentprice() {
         return mcurrentprice;
     }
+    public void setMcurrentprice(String mcurrentprice) {
+        this.mcurrentprice = mcurrentprice;
+    }
+
     public String getMtodaylow() {
         return mtodaylow;
     }
+    public void setMtodaylow(String mtodaylow) {
+        this.mtodaylow = mtodaylow;
+    }
+
     public String getMtodayhigh() {
         return mtodayhigh;
     }
+    public void setMtodayhigh(String mtodayhigh) {
+        this.mtodayhigh = mtodayhigh;
+    }
+
     public void setMchecked(boolean val){this.mchecked=val; }
 
     public boolean getMchecked() {

@@ -17,6 +17,11 @@ import android.widget.TextView;
 
 
 import java.util.ArrayList;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -43,14 +48,32 @@ public class MainActivity extends AppCompatActivity{
             Serializable mylist = savedInstanceState.getSerializable("key");
             myList = (ArrayList<StockItem>) mylist;
         }
+        stockName = findViewById(R.id.nameinput);
+
 
         myButton = findViewById(R.id.button);
         myButton.setText("Detailed Info");
+
+
+        myButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String company = stockName.getText().toString();
+
+                Intent add_intent = new Intent(MainActivity.this, API.class);
+
+
+                add_intent.putExtra("NAME", company);
+
+                startActivity(add_intent);
+
+            }
+        });
         myaddButton = findViewById(R.id.addbutton);
         myaddButton.setText("Add Stock to Favorite");
         myfavorite = findViewById(R.id.favorite);
         myfavorite.setText("Favorite");
-        stockName = findViewById(R.id.nameinput);
 
         settingButton = findViewById(R.id.settingbutton);
         settingButton.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +91,7 @@ public class MainActivity extends AppCompatActivity{
         rvItems.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // Check which request we're responding to
