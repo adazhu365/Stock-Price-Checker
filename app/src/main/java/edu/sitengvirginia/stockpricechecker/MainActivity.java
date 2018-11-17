@@ -35,6 +35,9 @@ public class MainActivity extends AppCompatActivity{
     StockListAdapter adapter;
     private EditText stockName;
     private ImageButton settingButton;
+    private TextView add1;
+    private TextView add2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,13 @@ public class MainActivity extends AppCompatActivity{
             myList = (ArrayList<StockItem>) mylist;
         }
         stockName = findViewById(R.id.nameinput);
+        //add1 = (TextView) findViewById(R.id.textView20);
+//        add1.setText(getIntent().getStringExtra("low"));
+//        add2 = (TextView) findViewById(R.id.textView21);
+//        add1.setText(getIntent().getStringExtra("high"));
+
+
+
 
 
         myButton = findViewById(R.id.button);
@@ -62,7 +72,6 @@ public class MainActivity extends AppCompatActivity{
                 String company = stockName.getText().toString();
 
                 Intent add_intent = new Intent(MainActivity.this, API.class);
-
 
                 add_intent.putExtra("NAME", company);
 
