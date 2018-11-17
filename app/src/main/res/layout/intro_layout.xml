@@ -14,7 +14,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="34dp"
         android:layout_marginEnd="16dp"
-        android:text="Welcome to the best stock price checker app ever!"
+        android:text='Welcome to the best stock price checker app ever! E.x Search "AAPL" instead of Apple. '
         android:textAppearance="@android:style/TextAppearance.Material.Headline"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"

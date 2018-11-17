@@ -65,11 +65,11 @@ public class StockItem implements Serializable{
 
     public static ArrayList<StockItem> createInitialBucketList() {
         ArrayList<StockItem> initialList = new ArrayList<StockItem>();
-        initialList.add(new StockItem("Apple", "230", "225", "240", false));
+        initialList.add(new StockItem("ETFC", "230", "225", "240", false));
 
-        initialList.add(new StockItem("IBM", "100", "99", "101", false));
+        initialList.add(new StockItem("IESC", "100", "99", "101", false));
 
-        initialList.add(new StockItem("Tesla", "350", "320", "360", false));
+        initialList.add(new StockItem("TROW", "350", "320", "360", false));
 
         return initialList;
     }
