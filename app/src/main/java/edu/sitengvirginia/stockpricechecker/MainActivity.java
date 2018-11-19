@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity{
     private TextView add1;
     private TextView add2;
 
+    String information[] = new String[6];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,20 +64,26 @@ public class MainActivity extends AppCompatActivity{
         myButton.setText("Detailed Info");
 
 
-        myButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+//        myButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//
+//                String company = stockName.getText().toString();
+//
+//                Intent add_intent = new Intent(MainActivity.this, API.class);
+//
+//                // add_intent.putExtra("NAME", company);
+//
+//                System.out.println(information[0]);
+//
+//                add_intent.putExtra("high", information[0]);
+//
+//                startActivity(add_intent);
+//
+//            }
+//        });
 
-                String company = stockName.getText().toString();
 
-                Intent add_intent = new Intent(MainActivity.this, API.class);
-
-                add_intent.putExtra("NAME", company);
-
-                startActivity(add_intent);
-
-            }
-        });
         myaddButton = findViewById(R.id.addbutton);
         myaddButton.setText("Add Stock to Favorite");
         myfavorite = findViewById(R.id.favorite);
@@ -97,6 +105,68 @@ public class MainActivity extends AppCompatActivity{
         rvItems.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
     }
+
+    public void downloadData(View view) {
+
+        Log.e("tag2", "yay");
+        // Add your code here to download the data and update the screen
+
+        LousListAPIInterface apiService =
+                LousListAPIClient.getClient().create(LousListAPIInterface.class);
+        Log.e("tag4", "HEREEE");
+
+        Call<stockkey> call = apiService.get(stockName.getText().toString(), "OjQxNmI3YWI5MDhiYjU5ZDllMTk4MTBmZDM0YjQzZDU2");
+        //  Call<stockkey> call = apiService.sectionList();
+
+        Log.e("tag5", "122222");
+
+
+        call.enqueue(new Callback<stockkey>() {
+
+            @Override
+            public void onResponse(Call<stockkey> call, Response<stockkey> response) {
+                stockkey sections = response.body();
+                Log.d("TAG3", response.body().toString());
+
+                information[0] = String.valueOf(sections.getData().get(0).getHigh());
+                information[1] = String.valueOf(sections.getData().get(0).getLow());
+                information[2] = String.valueOf(sections.getData().get(0).getClose());
+                information[3] = String.valueOf(sections.getData().get(0).getVolume());
+                information[4] = String.valueOf(sections.getData().get(0).getEx_dividend());
+                information[5] = String.valueOf(sections.getData().get(0).getSplit_ratio());
+
+
+                Intent add_intent = new Intent(MainActivity.this, API.class);
+
+                // add_intent.putExtra("NAME", company);
+
+                System.out.println(information[0]);
+
+                add_intent.putExtra("NAME", stockName.getText().toString());
+
+
+                add_intent.putExtra("high", information[0]);
+                add_intent.putExtra("low", information[1]);
+                add_intent.putExtra("close", information[2]);
+                add_intent.putExtra("volume", information[3]);
+                add_intent.putExtra("ex", information[4]);
+                add_intent.putExtra("split", information[5]);
+
+
+
+                startActivity(add_intent);
+
+            }
+
+            @Override
+            public void onFailure(Call<stockkey> call, Throwable t) {
+                // Log error here since request failed
+                Log.e("LousList", t.toString());
+            }
+        });
+
+        // return info;
+    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
