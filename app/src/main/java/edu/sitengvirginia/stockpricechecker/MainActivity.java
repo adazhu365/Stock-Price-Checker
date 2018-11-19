@@ -58,9 +58,6 @@ public class MainActivity extends AppCompatActivity{
 //        add1.setText(getIntent().getStringExtra("high"));
 
 
-
-
-
         myButton = findViewById(R.id.button);
         myButton.setText("Detailed Info");
 
