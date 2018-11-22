@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             Log.e("test", "yaya");
-            myList = StockItem.createInitialBucketList();
+            myList = StockItem.createInitialBucketList();// may replace the values
         }
         else {
             Serializable mylist = savedInstanceState.getSerializable("key");
@@ -143,8 +143,6 @@ public class MainActivity extends AppCompatActivity{
                 System.out.println(information[0]);
 
                 add_intent.putExtra("NAME", stockName.getText().toString());
-
-
                 add_intent.putExtra("high", information[0]);
                 add_intent.putExtra("low", information[1]);
                 add_intent.putExtra("close", information[2]);
@@ -187,6 +185,24 @@ public class MainActivity extends AppCompatActivity{
                 adapter.notifyDataSetChanged();
             }
         }
+//
+//        if (requestCode == 1) {
+//            // Make sure the request was successful
+//            if (resultCode == RESULT_OK) {
+//                String name = data1.getStringExtra("name");
+//                Log.e("test", name);
+//                String date = data1.getStringExtra("date");
+//                float todaylow = data1.getFloatExtra("low", 0);
+//                float todayhigh = data1.getFloatExtra("high", 0);
+//                Data b = new Data(date, todaylow, todayhigh,false);
+//
+//
+//                myList.add(b);
+//
+//                Log.e("test2", name);
+//                adapter.notifyDataSetChanged();
+//            }
+//        }
         /*if (requestCode == 2) {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
