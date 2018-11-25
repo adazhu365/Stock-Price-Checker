@@ -1,10 +1,12 @@
 package edu.sitengvirginia.stockpricechecker;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 
 import android.util.Log;
@@ -65,13 +67,25 @@ public class API extends AppCompatActivity {
             public void onClick(View view) {
                 float low = Float.valueOf(todaylow.getText().toString());
                 float high = Float.valueOf(todayhigh.getText().toString());
+                final Button button = findViewById(R.id.button);
+                //FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+                TextView todayhigh = findViewById(R.id.textView5);
+                TextView todaylow = findViewById(R.id.textView6);
+                TextView Close = findViewById(R.id.textView10);
+                TextView name = findViewById(R.id.textView2);
+                //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Intent resultIntent = new Intent();
+                resultIntent.putExtra("name", name.getText().toString());
+                resultIntent.putExtra("todaylow", todaylow.getText().toString());
+                resultIntent.putExtra("todayhigh", todayhigh.getText().toString());
+                resultIntent.putExtra("Close", Close.getText().toString());
+                setResult(Activity.RESULT_OK, resultIntent);
+                finish();
 
-                Intent add_intent = new Intent(API.this, MainActivity.class);
-                add_intent.putExtra("low", low);
-                add_intent.putExtra("high", high);
 
-
-                startActivity(add_intent);
+                //Intent add_intent = new Intent(API.this, MainActivity.class);
+                //add_intent.putExtra("low", low);
+                //add_intent.putExtra("high", high);
             }
         });
         courseNameTextView.setText(getIntent().getStringExtra("NAME"));

@@ -179,9 +179,7 @@ public class MainActivity extends AppCompatActivity{
                 add_intent.putExtra("ex", information[4]);
                 add_intent.putExtra("split", information[5]);
 
-
-
-                startActivity(add_intent);
+                startActivityForResult(add_intent, req_code);
 
             }
 
@@ -296,10 +294,10 @@ public class MainActivity extends AppCompatActivity{
             if (resultCode == RESULT_OK) {
                 String name = data.getStringExtra("name");
                 Log.e("test", name);
-                String currentprice = data.getStringExtra("currentprice");
+                String close = data.getStringExtra("Close");
                 String todaylow = data.getStringExtra("todaylow");
                 String todayhigh = data.getStringExtra("todayhigh");
-                StockItem b = StockItem.createStockItem(name, currentprice, todaylow, todayhigh,false);
+                StockItem b = StockItem.createStockItem(name, close, todaylow, todayhigh,false);
 
 
                 myList.add(b);
@@ -307,46 +305,7 @@ public class MainActivity extends AppCompatActivity{
                 adapter.notifyDataSetChanged();
             }
         }
-//
-//        if (requestCode == 1) {
-//            // Make sure the request was successful
-//            if (resultCode == RESULT_OK) {
-//                String name = data1.getStringExtra("name");
-//                Log.e("test", name);
-//                String date = data1.getStringExtra("date");
-//                float todaylow = data1.getFloatExtra("low", 0);
-//                float todayhigh = data1.getFloatExtra("high", 0);
-//                Data b = new Data(date, todaylow, todayhigh,false);
-//
-//
-//                myList.add(b);
-//
-//                Log.e("test2", name);
-//                adapter.notifyDataSetChanged();
-//            }
-//        }
-        /*if (requestCode == 2) {
-            // Make sure the request was successful
-            if (resultCode == RESULT_OK) {
 
-                String name = data.getStringExtra("name");
-                Log.e("test", name);
-                String description = data.getStringExtra("description");
-                String latitude = data.getStringExtra("latitude");
-                String longitude = data.getStringExtra("longitude");
-                String date = data.getStringExtra("date");
-                int position = data.getIntExtra("position", 0);
-                boolean checked = data.getBooleanExtra("checked", false);
-                StockItem b = StockItem.editStockItem(myList.get(position), name, description, latitude, longitude, date, checked);
-                myList.remove(myList.get(position));
-
-
-                myList.add(b);
-                Log.e("test2", name);
-                adapter.notifyDataSetChanged();
-            }
-        }
-        */
     }
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
