@@ -55,16 +55,17 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        if (savedInstanceState == null) {
-            Log.e("test", "yaya");
+        myList = new ArrayList<StockItem>();
+        loadFromDatabase();
+        Log.e("list", myList.toString());
+        /*if (savedInstanceState == null) {
             myList = StockItem.createInitialBucketList();// may replace the values
         }
         else {
             Serializable mylist = savedInstanceState.getSerializable("key");
             myList = (ArrayList<StockItem>) mylist;
         }
-
+        */
         stockName = findViewById(R.id.nameinput);
         //add1 = (TextView) findViewById(R.id.textView20);
 //        add1.setText(getIntent().getStringExtra("low"));
@@ -98,8 +99,7 @@ public class MainActivity extends AppCompatActivity{
 
         myaddButton = findViewById(R.id.addbutton);
         myaddButton.setText("Add Stock to Favorite");
-        loadButton = findViewById(R.id.loadbutton);
-        loadButton.setText("load Stock to Favorite");
+
         myfavorite = findViewById(R.id.favorite);
 
         myfavorite.setText("Favorite");
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity{
             String line;
             ArrayList<StockItem> a = new ArrayList<StockItem>();
             while((line = reader.readLine()) != null){
-                Log.e("yes", line);
+                //Log.e("yes", line);
 
             }
             fis.close();
@@ -137,17 +137,17 @@ public class MainActivity extends AppCompatActivity{
 
     public void downloadData(View view) {
 
-        Log.e("tag2", "yay");
+        //Log.e("tag2", "yay");
         // Add your code here to download the data and update the screen
 
         LousListAPIInterface apiService =
                 LousListAPIClient.getClient().create(LousListAPIInterface.class);
-        Log.e("tag4", "HEREEE");
+        //Log.e("tag4", "HEREEE");
 
         Call<stockkey> call = apiService.get(stockName.getText().toString(), "OjQxNmI3YWI5MDhiYjU5ZDllMTk4MTBmZDM0YjQzZDU2");
         //  Call<stockkey> call = apiService.sectionList();
 
-        Log.e("tag5", "122222");
+        //Log.e("tag5", "122222");
 
 
         call.enqueue(new Callback<stockkey>() {
@@ -244,25 +244,24 @@ public class MainActivity extends AppCompatActivity{
         try {
             FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
         }catch(Exception e) {
-            Log.e("StorageExample", e.getMessage());
+            Log.e("StorageExample0", e.getMessage());
         }
         try {
             FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
             for (int i=0; i<myList.size(); i++) {
                 String string = myList.get(i).getMname() + " " + myList.get(i).getMcurrentprice()
                         + " " + myList.get(i).getMtodaylow() + " " + myList.get(i).getMtodayhigh();
-                Log.e("stored", string);
                 fos.write(string.getBytes());
                 fos.write("\n".getBytes());
             }
             fos.close();
         }catch(Exception e) {
-            Log.e("StorageExample", e.getMessage());
+            Log.e("StorageExample1", e.getMessage());
         }
 
     }
 
-    public void loadFromDatabase(View view) {
+    public void loadFromDatabase() {
         String FILENAME = "hello_file2";
         try {
             FileInputStream fis = openFileInput(FILENAME);
@@ -274,9 +273,17 @@ public class MainActivity extends AppCompatActivity{
             }
             Log.e("loadfromstorage", a.toString());
             fis.close();
+            for (int i=0; i<a.size(); i++) {
+                String[] splited = a.get(i).toString().split("\\s+");
+                Log.e("test", a.toString());
+                StockItem b = StockItem.createStockItem(splited[0], splited[1], splited[2], splited[3],false);
+                myList.add(b);
+            }
         }catch(Exception e) {
             File file = new File(FILENAME);
-            Log.e("StorageExample", e.getMessage());
+            //myList = StockItem.createInitialBucketList();
+            Log.e("StorageExample2", e.getMessage());
+
         }
 
 
@@ -293,7 +300,6 @@ public class MainActivity extends AppCompatActivity{
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 String name = data.getStringExtra("name");
-                Log.e("test", name);
                 String close = data.getStringExtra("Close");
                 String todaylow = data.getStringExtra("todaylow");
                 String todayhigh = data.getStringExtra("todayhigh");
@@ -301,17 +307,14 @@ public class MainActivity extends AppCompatActivity{
 
 
                 myList.add(b);
-                Log.e("test2", name);
                 adapter.notifyDataSetChanged();
             }
         }
 
     }
-    @Override
+    /*@Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         savedInstanceState.putSerializable("key", myList);
-        Log.e("test", savedInstanceState.toString());
-        Log.e("test", "yyy");
         super.onSaveInstanceState(savedInstanceState);
 
     }
@@ -322,5 +325,5 @@ public class MainActivity extends AppCompatActivity{
 
         myList = (ArrayList<StockItem>) mylist;
     }
-
+*/
 }
