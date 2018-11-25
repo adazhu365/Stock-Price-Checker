@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity{
         // return info;
     };
 
-    public void saveToDatabase(View view) {
+    public void saveToDatabase() {
         // Add code here to save to the database
         DatabaseHelper mDbHelper = new DatabaseHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -307,7 +307,9 @@ public class MainActivity extends AppCompatActivity{
 
 
                 myList.add(b);
+                saveToDatabase();
                 adapter.notifyDataSetChanged();
+
             }
         }
 
