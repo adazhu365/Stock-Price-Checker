@@ -1,7 +1,16 @@
 package edu.sitengvirginia.stockpricechecker;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.text.ParseException;
 
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -27,6 +36,7 @@ public class MainActivity extends AppCompatActivity{
 
     private Button myButton;
     private Button myaddButton;
+    private Button loadButton;
     private TextView myfavorite;
     RecyclerView rvItems;
     ArrayList<StockItem> myList;
@@ -45,6 +55,7 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if (savedInstanceState == null) {
             Log.e("test", "yaya");
             myList = StockItem.createInitialBucketList();// may replace the values
@@ -53,6 +64,7 @@ public class MainActivity extends AppCompatActivity{
             Serializable mylist = savedInstanceState.getSerializable("key");
             myList = (ArrayList<StockItem>) mylist;
         }
+
         stockName = findViewById(R.id.nameinput);
         //add1 = (TextView) findViewById(R.id.textView20);
 //        add1.setText(getIntent().getStringExtra("low"));
@@ -86,9 +98,26 @@ public class MainActivity extends AppCompatActivity{
 
         myaddButton = findViewById(R.id.addbutton);
         myaddButton.setText("Add Stock to Favorite");
+        loadButton = findViewById(R.id.loadbutton);
+        loadButton.setText("load Stock to Favorite");
         myfavorite = findViewById(R.id.favorite);
-        myfavorite.setText("Favorite");
 
+        myfavorite.setText("Favorite");
+        String FILENAME = "hello_file2";
+        try {
+            FileInputStream fis = openFileInput(FILENAME);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            String line;
+            ArrayList<StockItem> a = new ArrayList<StockItem>();
+            while((line = reader.readLine()) != null){
+                Log.e("yes", line);
+
+            }
+            fis.close();
+        }catch(Exception e) {
+            File file = new File(FILENAME);
+            Log.e("StorageExample", e.getMessage());
+        }
         settingButton = findViewById(R.id.settingbutton);
         settingButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +194,99 @@ public class MainActivity extends AppCompatActivity{
 
         // return info;
     };
+
+    public void saveToDatabase(View view) {
+        // Add code here to save to the database
+        DatabaseHelper mDbHelper = new DatabaseHelper(this);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        for (int i=0; i<myList.size(); i++) {
+            values.put("name", myList.get(i).getMname());
+            values.put("currentval", myList.get(i).getMcurrentprice());
+            values.put("todaylow", myList.get(i).getMtodaylow());
+            values.put("todayhigh", myList.get(i).getMtodayhigh());
+
+        }
+        long newRowId;
+        newRowId = db.insert(
+                "stock",
+                null,
+                values);
+
+        // Define a projection that specifies which columns from the database
+        // you will actually use after this query.
+        String[] projection = {
+                "name",
+                "currentval",
+                "todaylow",
+                "todayhigh",
+        };
+
+        // How you want the results sorted in the resulting Cursor
+        String sortOrder =
+                "name" + " DESC";
+
+
+        Cursor cursor = db.query(
+                "stock",  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+        while(cursor.moveToNext()) {
+            String currID = cursor.getString(
+                    cursor.getColumnIndexOrThrow("name")
+            );
+            Log.e("DBData", currID);
+        }
+        String FILENAME = "hello_file2";
+        try {
+            FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+        }catch(Exception e) {
+            Log.e("StorageExample", e.getMessage());
+        }
+        try {
+            FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
+            for (int i=0; i<myList.size(); i++) {
+                String string = myList.get(i).getMname() + " " + myList.get(i).getMcurrentprice()
+                        + " " + myList.get(i).getMtodaylow() + " " + myList.get(i).getMtodayhigh();
+                Log.e("stored", string);
+                fos.write(string.getBytes());
+                fos.write("\n".getBytes());
+            }
+            fos.close();
+        }catch(Exception e) {
+            Log.e("StorageExample", e.getMessage());
+        }
+
+    }
+
+    public void loadFromDatabase(View view) {
+        String FILENAME = "hello_file2";
+        try {
+            FileInputStream fis = openFileInput(FILENAME);
+            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+            String line;
+            ArrayList a = new ArrayList();
+            while((line = reader.readLine()) != null){
+                a.add(line);
+            }
+            Log.e("loadfromstorage", a.toString());
+            fis.close();
+        }catch(Exception e) {
+            File file = new File(FILENAME);
+            Log.e("StorageExample", e.getMessage());
+        }
+
+
+
+        // Add code here to load from the database
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
