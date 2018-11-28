@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
 
-                Intent add_intent = new Intent(MainActivity.this, SettingActivity.class);
+                Intent add_intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivityForResult(add_intent, req_code);
             }
         });
