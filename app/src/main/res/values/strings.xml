@@ -12,8 +12,20 @@
         based on your message history
     </string>
 
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
+    <string name="pref_title_display_name">Font Size</string>
+    <string name="pref_default_display_name">16px</string>
+    <string-array name="pref_font_size">
+        <item>Small</item>
+        <item>Medium</item>
+        <item>Large</item>
+        <item>Huge</item>
+    </string-array>
+    <string-array name="pref_font_values">
+        <item>12</item>
+        <item>18</item>
+        <item>24</item>
+        <item>30</item>
+    </string-array>
 
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
     <string-array name="pref_example_list_titles">
