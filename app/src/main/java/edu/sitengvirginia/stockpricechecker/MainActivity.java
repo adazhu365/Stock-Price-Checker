@@ -39,6 +39,7 @@ public class MainActivity extends AppCompatActivity{
 
     private Button myButton;
     private Button myaddButton;
+    private Button myDeleteButton;
     private Button loadButton;
     private TextView myfavorite;
     RecyclerView rvItems;
@@ -111,7 +112,8 @@ public class MainActivity extends AppCompatActivity{
 
         myaddButton = findViewById(R.id.addbutton);
         myaddButton.setText("Add Stock to Favorite");
-
+        myDeleteButton = findViewById(R.id.deletebutton);
+        myDeleteButton.setText("Delete");
         myfavorite = findViewById(R.id.favorite);
 
         myfavorite.setText("Favorite");
@@ -146,7 +148,23 @@ public class MainActivity extends AppCompatActivity{
         rvItems.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
     }
+    public void delete(View view) {
+        Log.e("delete", "da");
+        for (int i = 0; i<myList.size(); i++) {
+            Log.e("delete", "ddadad");
+            if (myList.get(i).getMchecked()) {
+                myList.remove(myList.get(i));
+            }
 
+        }
+
+
+        saveToDatabase();
+        myList = new ArrayList<StockItem>();
+        loadFromDatabase();
+        adapter.notifyDataSetChanged();
+
+    }
     public void downloadData(View view) {
 
         //Log.e("tag2", "yay");
