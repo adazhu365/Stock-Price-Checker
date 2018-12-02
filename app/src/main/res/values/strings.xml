@@ -21,10 +21,10 @@
         <item>Huge</item>
     </string-array>
     <string-array name="pref_font_values">
-        <item>12</item>
-        <item>18</item>
-        <item>24</item>
-        <item>30</item>
+        <item name="small">12sp</item>
+        <item name="medium">18sp</item>
+        <item name="large">24sp</item>
+        <item name="huge">30sp</item>
     </string-array>
 
     <string name="pref_title_add_friends_to_messages">Add friends to messages</string>

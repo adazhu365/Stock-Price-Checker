@@ -37,6 +37,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity{
 
+    public static float textsize = 12;
     private Button myButton;
     private Button myaddButton;
     private Button myDeleteButton;
@@ -65,7 +66,20 @@ public class MainActivity extends AppCompatActivity{
                 PreferenceManager.getDefaultSharedPreferences(this);
         String marketPref = sharedPref.getString("sync_frequency", "-1");
         Toast.makeText(this, marketPref, Toast.LENGTH_SHORT).show();
-
+        String fontsize = sharedPref.getString("example_text", "12sp");
+        if (fontsize.equals("12sp")) {
+            textsize = 12;
+        }
+        if (fontsize.equals("18sp")) {
+            textsize = 18;
+        }
+        if (fontsize.equals("24sp")) {
+            textsize = 24;
+        }
+        if (fontsize.equals("30sp")) {
+            textsize = 30;
+        }
+        Log.e("font", String.valueOf(textsize));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myList = new ArrayList<StockItem>();
@@ -88,7 +102,6 @@ public class MainActivity extends AppCompatActivity{
 
         myButton = findViewById(R.id.button);
         myButton.setText("Detailed Info");
-
 
 //        myButton.setOnClickListener(new View.OnClickListener() {
 //            @Override

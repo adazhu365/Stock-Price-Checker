@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
 import edu.sitengvirginia.stockpricechecker.MainActivity;
 
 
@@ -41,9 +41,13 @@ public class StockListAdapter extends
             super(itemView);
             checkbox = (CheckBox) itemView.findViewById(R.id.checkbox);
             nameTextView = (TextView) itemView.findViewById(R.id.StockItemName);
+            nameTextView.setTextSize(MainActivity.textsize);
             priceTextView = (TextView) itemView.findViewById(R.id.StockItemPrice);
+            priceTextView.setTextSize(MainActivity.textsize);
             lowTextView = (TextView) itemView.findViewById(R.id.StockItemTodayLow);
+            lowTextView.setTextSize(MainActivity.textsize);
             highTextView = (TextView) itemView.findViewById(R.id.StockItemTodayHigh);
+            highTextView.setTextSize(MainActivity.textsize);
         }
     }
 
@@ -89,17 +93,21 @@ public class StockListAdapter extends
         String nameDisplay = bucket.getMname();
         textView.setText(nameDisplay);
 
+
         TextView currentpriceView = viewHolder.priceTextView;
         String priceDisplay = "Current Price: " + bucket.getMcurrentprice();
         currentpriceView.setText(priceDisplay);
+
 
         TextView lowView = viewHolder.lowTextView;
         String lowDisplay = " Today's Low: " + bucket.getMtodaylow();
         lowView.setText(lowDisplay);
 
+
         TextView highView = viewHolder.highTextView;
         String highDisplay = " Today's High: " + bucket.getMtodayhigh();
         highView.setText(highDisplay);
+
 
         final CheckBox complete = viewHolder.checkbox;
         complete.setChecked(bucket.getMchecked());
