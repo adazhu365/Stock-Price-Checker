@@ -37,7 +37,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity{
 
-    public static float textsize = 12;
+    public static float textsize = 18;
     private Button myButton;
     private Button myaddButton;
     private Button myDeleteButton;
