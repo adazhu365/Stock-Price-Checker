@@ -4,16 +4,22 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.text.ParseException;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -52,6 +58,8 @@ public class MainActivity extends AppCompatActivity{
     private ImageButton settingButton;
     private TextView add1;
     private TextView add2;
+    private final String filenameExternal = "FINALSAVECHECKFILE.txt";
+
 
     String information[] = new String[6];
 
@@ -124,7 +132,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         myaddButton = findViewById(R.id.addbutton);
-        myaddButton.setText("Add Stock to Favorite");
+        myaddButton.setText("Email Summary");
         myDeleteButton = findViewById(R.id.deletebutton);
         myDeleteButton.setText("Delete");
         myfavorite = findViewById(R.id.favorite);
@@ -161,6 +169,117 @@ public class MainActivity extends AppCompatActivity{
         rvItems.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
     }
+    public  boolean isReadStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                //Log.v(TAG,"Permission is granted1");
+                return true;
+            } else {
+
+                // Log.v(TAG,"Permission is revoked1");
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, 3);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            // Log.v(TAG,"Permission is granted1");
+            return true;
+        }
+    }
+
+    public  boolean isWriteStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                //     Log.v(TAG,"Permission is granted2");
+                return true;
+            } else {
+
+                //     Log.v(TAG,"Permission is revoked2");
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+                return false;
+            }
+        }
+        else { //permission is automatically granted on sdk<23 upon installation
+            //  Log.v(TAG,"Permission is granted2");
+            return true;
+        }
+    }
+    public void writeFileExternalStorage(View view) {
+        String info2 = "";
+
+        for ( StockItem i:myList){
+            info2 = info2 + "stock name: " + i.getMname() + " " +"today low: " +  i.getMtodaylow() + " " +
+                    "current price : " + i.getMcurrentprice() +" " + "today high: " + i.getMtodayhigh() + "\n";
+
+        }
+
+
+        String state = Environment.getExternalStorageState();
+
+        isWriteStoragePermissionGranted();
+
+
+        //external storage availability check
+        if (!Environment.MEDIA_MOUNTED.equals(state)) {
+            Log.e("tag11", "strrrr");
+
+            return;
+        }
+        Log.e("tag12", "strrrr");
+
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOWNLOADS), filenameExternal);
+        Log.e("tag13", "strrrr");
+
+        FileOutputStream outputStream = null;
+        try {
+            Log.e("tag14", "strrrr");
+            //file.mkdirs();
+            file.getParentFile().mkdirs();
+
+            file.createNewFile();
+            Log.e("tag15", "strrrr");
+
+            //second argument of FileOutputStream constructor indicates whether to append or create new file if one exists
+            outputStream = new FileOutputStream(file, true);
+            Log.e("createfile", "strrrr");
+
+            PrintWriter cleann = new PrintWriter(file);
+            cleann.close();
+
+            outputStream.write(info2.getBytes());
+            outputStream.flush();
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.e("Tag10", Environment.getExternalStorageDirectory().toString());
+
+
+
+        Uri path = Uri.fromFile(file);
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("vnd.android.cursor.dir/email");
+
+        Log.e("tag17", "sharrr");
+
+        SharedPreferences email = getSharedPreferences("EmailPrefsFile", 0);
+
+        String to[] = {email.getString("Email", "")};
+        Log.e("tag16", email.getString("Email", ""));
+        emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
+// the attachment
+        emailIntent .putExtra(Intent.EXTRA_STREAM, path);
+// the mail subject
+        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+        startActivity(Intent.createChooser(emailIntent , "Send email..."));
+
+    }
+
+
     public void delete(View view) {
         ArrayList<StockItem> newList = new ArrayList<StockItem>();
         for (int i = 0; i<myList.size(); i++) {
