@@ -79,12 +79,12 @@ public class MainActivity extends AppCompatActivity{
         if (fontsize.equals("30sp")) {
             textsize = 30;
         }
-        Log.e("font", String.valueOf(textsize));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         myList = new ArrayList<StockItem>();
         loadFromDatabase();
-        Log.e("list", myList.toString());
+
         /*if (savedInstanceState == null) {
             myList = StockItem.createInitialBucketList();// may replace the values
         }
@@ -162,19 +162,17 @@ public class MainActivity extends AppCompatActivity{
         adapter.notifyDataSetChanged();
     }
     public void delete(View view) {
-        Log.e("delete", "da");
+        ArrayList<StockItem> newList = new ArrayList<StockItem>();
         for (int i = 0; i<myList.size(); i++) {
-            Log.e("delete", "ddadad");
             if (myList.get(i).getMchecked()) {
-                myList.remove(myList.get(i));
+                newList.add(myList.get(i));
             }
 
         }
-
-
+        myList.removeAll(newList);
         saveToDatabase();
-        myList = new ArrayList<StockItem>();
-        loadFromDatabase();
+        //myList = new ArrayList<StockItem>();
+        //loadFromDatabase();
         adapter.notifyDataSetChanged();
 
     }
@@ -281,7 +279,6 @@ public class MainActivity extends AppCompatActivity{
             String currID = cursor.getString(
                     cursor.getColumnIndexOrThrow("name")
             );
-            Log.e("DBData", currID);
         }
         String FILENAME = "hello_file2";
         try {
@@ -324,7 +321,7 @@ public class MainActivity extends AppCompatActivity{
             }
         }catch(Exception e) {
             File file = new File(FILENAME);
-            //myList = StockItem.createInitialBucketList();
+            myList = StockItem.createInitialBucketList();
             Log.e("StorageExample2", e.getMessage());
 
         }
@@ -351,6 +348,7 @@ public class MainActivity extends AppCompatActivity{
 
                 myList.add(b);
                 saveToDatabase();
+                Log.e("update", b.getMcurrentprice());
                 adapter.notifyDataSetChanged();
 
             }
