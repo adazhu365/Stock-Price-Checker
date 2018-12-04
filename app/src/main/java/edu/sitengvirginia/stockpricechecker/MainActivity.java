@@ -43,7 +43,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity{
 
-    public static float textsize = 18;
+    public static float textsize = 16;
     private Button myButton;
     private Button myaddButton;
     private Button myDeleteButton;
@@ -74,18 +74,18 @@ public class MainActivity extends AppCompatActivity{
                 PreferenceManager.getDefaultSharedPreferences(this);
         String marketPref = sharedPref.getString("sync_frequency", "-1");
         Toast.makeText(this, marketPref, Toast.LENGTH_SHORT).show();
-        String fontsize = sharedPref.getString("example_text", "12sp");
+        String fontsize = sharedPref.getString("example_text", "16sp");
         if (fontsize.equals("12sp")) {
             textsize = 12;
         }
-        if (fontsize.equals("18sp")) {
-            textsize = 18;
+        if (fontsize.equals("16sp")) {
+            textsize = 16;
+        }
+        if (fontsize.equals("20sp")) {
+            textsize = 20;
         }
         if (fontsize.equals("24sp")) {
             textsize = 24;
-        }
-        if (fontsize.equals("30sp")) {
-            textsize = 30;
         }
 
         super.onCreate(savedInstanceState);
@@ -93,43 +93,10 @@ public class MainActivity extends AppCompatActivity{
         myList = new ArrayList<StockItem>();
         loadFromDatabase();
 
-        /*if (savedInstanceState == null) {
-            myList = StockItem.createInitialBucketList();// may replace the values
-        }
-        else {
-            Serializable mylist = savedInstanceState.getSerializable("key");
-            myList = (ArrayList<StockItem>) mylist;
-        }
-        */
         stockName = findViewById(R.id.nameinput);
-        //add1 = (TextView) findViewById(R.id.textView20);
-//        add1.setText(getIntent().getStringExtra("low"));
-//        add2 = (TextView) findViewById(R.id.textView21);
-//        add1.setText(getIntent().getStringExtra("high"));
-
 
         myButton = findViewById(R.id.button);
         myButton.setText("Detailed Info");
-
-//        myButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                String company = stockName.getText().toString();
-//
-//                Intent add_intent = new Intent(MainActivity.this, API.class);
-//
-//                // add_intent.putExtra("NAME", company);
-//
-//                System.out.println(information[0]);
-//
-//                add_intent.putExtra("high", information[0]);
-//
-//                startActivity(add_intent);
-//
-//            }
-//        });
-
 
         myaddButton = findViewById(R.id.addbutton);
         myaddButton.setText("Email Summary");

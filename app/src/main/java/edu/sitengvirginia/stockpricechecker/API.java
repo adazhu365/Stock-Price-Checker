@@ -23,6 +23,7 @@ import java.util.Map;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import edu.sitengvirginia.stockpricechecker.MainActivity;
 
 public class API extends AppCompatActivity {
 
@@ -48,6 +49,22 @@ public class API extends AppCompatActivity {
         volume = (TextView) findViewById(R.id.textView12);
         ex_dividend = (TextView) findViewById(R.id.textView14);
         split_ratio = (TextView) findViewById(R.id.textView16);
+
+        TextView text = findViewById(R.id.textView7);
+        text.setTextSize(MainActivity.textsize);
+        TextView text2 = findViewById(R.id.textView8);
+        text2.setTextSize(MainActivity.textsize);
+        TextView text3 = findViewById(R.id.textView9);
+        text3.setTextSize(MainActivity.textsize);
+        TextView text4 = findViewById(R.id.textView11);
+        text4.setTextSize(MainActivity.textsize);
+        TextView text5 = findViewById(R.id.textView13);
+        text5.setTextSize(MainActivity.textsize);
+        TextView text6 = findViewById(R.id.textView15);
+        text6.setTextSize(MainActivity.textsize);
+
+
+
 
         myButton = findViewById(R.id.button4);
         addFavorite = findViewById(R.id.button10);
@@ -89,12 +106,19 @@ public class API extends AppCompatActivity {
             }
         });
         courseNameTextView.setText(getIntent().getStringExtra("NAME"));
+        courseNameTextView.setTextSize(MainActivity.textsize);
         todayhigh.setText(getIntent().getStringExtra("high"));
+        todayhigh.setTextSize(MainActivity.textsize);
         todaylow.setText(getIntent().getStringExtra("low"));
+        todaylow.setTextSize(MainActivity.textsize);
         todayclose.setText(getIntent().getStringExtra("close"));
+        todayclose.setTextSize(MainActivity.textsize);
         volume.setText(getIntent().getStringExtra("volume"));
+        volume.setTextSize(MainActivity.textsize);
         ex_dividend.setText(getIntent().getStringExtra("ex"));
+        ex_dividend.setTextSize(MainActivity.textsize);
         split_ratio.setText(getIntent().getStringExtra("split"));
+        split_ratio.setTextSize(MainActivity.textsize);
     }
 
 
