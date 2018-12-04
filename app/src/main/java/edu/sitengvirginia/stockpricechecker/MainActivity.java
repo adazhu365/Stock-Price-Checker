@@ -6,6 +6,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -16,7 +18,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.design.widget.Snackbar;
+
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import android.util.Log;
 import android.support.v7.widget.RecyclerView;
 import android.content.Intent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -59,13 +62,10 @@ public class MainActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
 
         PreferenceManager.setDefaultValues(this, R.xml.pref_general, false);
-        PreferenceManager.setDefaultValues(this, R.xml.pref_notification, false);
         PreferenceManager.setDefaultValues(this, R.xml.pref_data_sync, false);
-
         SharedPreferences sharedPref =
                 PreferenceManager.getDefaultSharedPreferences(this);
-        String marketPref = sharedPref.getString("sync_frequency", "-1");
-        Toast.makeText(this, marketPref, Toast.LENGTH_SHORT).show();
+
         String fontsize = sharedPref.getString("example_text", "16sp");
         if (fontsize.equals("12sp")) {
             textsize = 12;
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         myList = new ArrayList<StockItem>();
         loadFromDatabase();
-
+        hideKeyboard(this);
         stockName = findViewById(R.id.nameinput);
 
         myButton = findViewById(R.id.button);
@@ -149,17 +149,12 @@ public class MainActivity extends AppCompatActivity{
     public void isWriteStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
-                //     Log.v(TAG,"Permission is granted2");
-            } else {
-
-                //     Log.v(TAG,"Permission is revoked2");
+                    != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
             }
         }
-        else { //permission is automatically granted on sdk<23 upon installation
-            //  Log.v(TAG,"Permission is granted2");
-        }
+
+
     }
     public void writeFileExternalStorage(View view) {
         String info2 = "";
@@ -418,6 +413,16 @@ public class MainActivity extends AppCompatActivity{
             }
         }
 
+    }
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }
