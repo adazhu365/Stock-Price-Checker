@@ -1,13 +1,11 @@
 package edu.sitengvirginia.stockpricechecker;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Serializable;
-import java.text.ParseException;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -32,14 +30,11 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import java.util.ArrayList;
-import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import android.support.annotation.NonNull;
 
 public class MainActivity extends AppCompatActivity{
 
@@ -51,13 +46,10 @@ public class MainActivity extends AppCompatActivity{
     private TextView myfavorite;
     RecyclerView rvItems;
     ArrayList<StockItem> myList;
-    private Snackbar snackbar;
     static final int req_code = 1;
     StockListAdapter adapter;
     private EditText stockName;
     private ImageButton settingButton;
-    private TextView add1;
-    private TextView add2;
     private final String filenameExternal = "FINALSAVECHECKFILE.txt";
 
 
@@ -103,7 +95,6 @@ public class MainActivity extends AppCompatActivity{
         myDeleteButton = findViewById(R.id.deletebutton);
         myDeleteButton.setText("Delete");
         myfavorite = findViewById(R.id.favorite);
-
         myfavorite.setText("Favorite");
         String FILENAME = "hello_file2";
         try {
@@ -155,22 +146,19 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    public  boolean isWriteStoragePermissionGranted() {
+    public void isWriteStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     == PackageManager.PERMISSION_GRANTED) {
                 //     Log.v(TAG,"Permission is granted2");
-                return true;
             } else {
 
                 //     Log.v(TAG,"Permission is revoked2");
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
-                return false;
             }
         }
         else { //permission is automatically granted on sdk<23 upon installation
             //  Log.v(TAG,"Permission is granted2");
-            return true;
         }
     }
     public void writeFileExternalStorage(View view) {
@@ -269,44 +257,38 @@ public class MainActivity extends AppCompatActivity{
 
         LousListAPIInterface apiService =
                 LousListAPIClient.getClient().create(LousListAPIInterface.class);
-        //Log.e("tag4", "HEREEE");
 
         Call<stockkey> call = apiService.get(stockName.getText().toString(), "OjQxNmI3YWI5MDhiYjU5ZDllMTk4MTBmZDM0YjQzZDU2");
-        //  Call<stockkey> call = apiService.sectionList();
-
-        //Log.e("tag5", "122222");
-
-
         call.enqueue(new Callback<stockkey>() {
-
             @Override
-            public void onResponse(Call<stockkey> call, Response<stockkey> response) {
+            public void onResponse(@NonNull Call<stockkey> call, @NonNull Response<stockkey> response) {
                 stockkey sections = response.body();
-                Log.d("TAG3", response.body().toString());
+                if(sections != null) {
+                    information[0] = String.valueOf(sections.getData().get(0).getHigh());
+                    information[1] = String.valueOf(sections.getData().get(0).getLow());
+                    information[2] = String.valueOf(sections.getData().get(0).getClose());
+                    information[3] = String.valueOf(sections.getData().get(0).getVolume());
+                    information[4] = String.valueOf(sections.getData().get(0).getEx_dividend());
+                    information[5] = String.valueOf(sections.getData().get(0).getSplit_ratio());
 
-                information[0] = String.valueOf(sections.getData().get(0).getHigh());
-                information[1] = String.valueOf(sections.getData().get(0).getLow());
-                information[2] = String.valueOf(sections.getData().get(0).getClose());
-                information[3] = String.valueOf(sections.getData().get(0).getVolume());
-                information[4] = String.valueOf(sections.getData().get(0).getEx_dividend());
-                information[5] = String.valueOf(sections.getData().get(0).getSplit_ratio());
 
+                    Intent add_intent = new Intent(MainActivity.this, API.class);
 
-                Intent add_intent = new Intent(MainActivity.this, API.class);
+                    // add_intent.putExtra("NAME", company);
+                    add_intent.putExtra("NAME", stockName.getText().toString());
+                    add_intent.putExtra("high", information[0]);
+                    add_intent.putExtra("low", information[1]);
+                    add_intent.putExtra("close", information[2]);
+                    add_intent.putExtra("volume", information[3]);
+                    add_intent.putExtra("ex", information[4]);
+                    add_intent.putExtra("split", information[5]);
 
-                // add_intent.putExtra("NAME", company);
-
-                System.out.println(information[0]);
-
-                add_intent.putExtra("NAME", stockName.getText().toString());
-                add_intent.putExtra("high", information[0]);
-                add_intent.putExtra("low", information[1]);
-                add_intent.putExtra("close", information[2]);
-                add_intent.putExtra("volume", information[3]);
-                add_intent.putExtra("ex", information[4]);
-                add_intent.putExtra("split", information[5]);
-
-                startActivityForResult(add_intent, req_code);
+                    startActivityForResult(add_intent, req_code);
+                }
+                else {
+                    Toast.makeText(getApplicationContext(),"The input stock name does not exist.",
+                            Toast.LENGTH_LONG).show();
+                }
 
             }
 
@@ -317,7 +299,8 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        // return info;
+
+
     };
 
     public void saveToDatabase() {
@@ -411,11 +394,6 @@ public class MainActivity extends AppCompatActivity{
             Log.e("StorageExample2", e.getMessage());
 
         }
-
-
-
-        // Add code here to load from the database
-
     }
 
 
@@ -441,18 +419,5 @@ public class MainActivity extends AppCompatActivity{
         }
 
     }
-    /*@Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        savedInstanceState.putSerializable("key", myList);
-        super.onSaveInstanceState(savedInstanceState);
 
-    }
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        Serializable mylist = savedInstanceState.getSerializable("key");
-
-        myList = (ArrayList<StockItem>) mylist;
-    }
-*/
 }

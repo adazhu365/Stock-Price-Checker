@@ -6,6 +6,15 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="StockName: "
+        android:textSize="20sp"
+        app:layout_constraintRight_toLeftOf="@id/nameinput"
+        app:layout_constraintBottom_toBottomOf="@id/nameinput"
+        app:layout_constraintTop_toTopOf="@id/nameinput"
+        />
     <EditText
         android:id="@+id/nameinput"
         android:layout_width="wrap_content"
@@ -59,11 +68,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="delete"
-        app:layout_constraintBottom_toTopOf="@+id/button"
-        app:layout_constraintEnd_toStartOf="@+id/settingbutton"
+        app:layout_constraintBottom_toBottomOf="@+id/settingbutton"
+        app:layout_constraintTop_toTopOf="@+id/settingbutton"
+        app:layout_constraintRight_toLeftOf="@id/settingbutton"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/rvItems"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.027" />
 
     <TextView
