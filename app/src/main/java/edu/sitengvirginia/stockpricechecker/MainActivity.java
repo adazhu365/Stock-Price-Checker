@@ -17,6 +17,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 
 import android.support.v4.app.ActivityCompat;
@@ -53,7 +54,7 @@ public class MainActivity extends AppCompatActivity{
     StockListAdapter adapter;
     private EditText stockName;
     private ImageButton settingButton;
-    private final String filenameExternal = "FINALSAVECHECKFILE.txt";
+    private final String filenameExternal = "StockSummary.txt";
 
 
     String information[] = new String[6];
@@ -208,7 +209,8 @@ public class MainActivity extends AppCompatActivity{
         }
         Log.e("Tag10", Environment.getExternalStorageDirectory().toString());
 
-
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
 
         Uri path = Uri.fromFile(file);
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
@@ -225,6 +227,7 @@ public class MainActivity extends AppCompatActivity{
         emailIntent .putExtra(Intent.EXTRA_STREAM, path);
 // the mail subject
         emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         startActivity(Intent.createChooser(emailIntent , "Send email..."));
 
     }
