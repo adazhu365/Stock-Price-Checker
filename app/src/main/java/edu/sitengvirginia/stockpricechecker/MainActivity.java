@@ -198,14 +198,18 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    public void isWriteStoragePermissionGranted() {
+    public boolean isWriteStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
+
             }
-            
+            return checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED;
+
         }
+        return false;
 
 
 
@@ -222,59 +226,61 @@ public class MainActivity extends AppCompatActivity{
 
         String state = Environment.getExternalStorageState();
 
-        isWriteStoragePermissionGranted();
+        if (isWriteStoragePermissionGranted()) {
+            if (!Environment.MEDIA_MOUNTED.equals(state)) {
+
+                return;
+            }
+
+
+
+            File file = new File(Environment.getExternalStoragePublicDirectory(
+                    Environment.DIRECTORY_DOWNLOADS), filenameExternal);
+
+
+            FileOutputStream outputStream = null;
+            try {
+
+                //file.mkdirs();
+                file.getParentFile().mkdirs();
+
+                file.createNewFile();
+
+                //second argument of FileOutputStream constructor indicates whether to append or create new file if one exists
+                outputStream = new FileOutputStream(file, true);
+
+                PrintWriter cleann = new PrintWriter(file);
+                cleann.close();
+
+                outputStream.write(info2.getBytes());
+                outputStream.flush();
+                outputStream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+            StrictMode.setVmPolicy(builder.build());
+
+            Uri path = Uri.fromFile(file);
+            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            emailIntent.setType("vnd.android.cursor.dir/email");
+
+
+            SharedPreferences email = getSharedPreferences("EmailPrefsFile", 0);
+
+            String to[] = {email.getString("Email", "")};
+            emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
+// the attachment
+            emailIntent .putExtra(Intent.EXTRA_STREAM, path);
+// the mail subject
+            emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
+            emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(Intent.createChooser(emailIntent , "Send email..."));
+        };
 
         //external storage availability check
-        if (!Environment.MEDIA_MOUNTED.equals(state)) {
 
-            return;
-        }
-
-
-
-        File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOWNLOADS), filenameExternal);
-
-
-        FileOutputStream outputStream = null;
-        try {
-
-            //file.mkdirs();
-            file.getParentFile().mkdirs();
-
-            file.createNewFile();
-
-            //second argument of FileOutputStream constructor indicates whether to append or create new file if one exists
-            outputStream = new FileOutputStream(file, true);
-
-            PrintWriter cleann = new PrintWriter(file);
-            cleann.close();
-
-            outputStream.write(info2.getBytes());
-            outputStream.flush();
-            outputStream.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
-        StrictMode.setVmPolicy(builder.build());
-
-        Uri path = Uri.fromFile(file);
-        Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setType("vnd.android.cursor.dir/email");
-
-
-        SharedPreferences email = getSharedPreferences("EmailPrefsFile", 0);
-
-        String to[] = {email.getString("Email", "")};
-        emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
-// the attachment
-        emailIntent .putExtra(Intent.EXTRA_STREAM, path);
-// the mail subject
-        emailIntent .putExtra(Intent.EXTRA_SUBJECT, "Subject");
-        emailIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivity(Intent.createChooser(emailIntent , "Send email..."));
 
     }
 
