@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity{
     private Button loadButton;
     private TextView myfavorite;
     RecyclerView rvItems;
-    ArrayList<StockItem> myList;
+    ArrayList<StockItem> myList = new ArrayList<StockItem>();
     static final int req_code = 1;
     StockListAdapter adapter;
     private EditText stockName;
@@ -83,9 +83,9 @@ public class MainActivity extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myList = new ArrayList<StockItem>();
+
         loadFromDatabase();
-        hideKeyboard(this);
+
         stockName = findViewById(R.id.nameinput);
 
         myButton = findViewById(R.id.button);
@@ -121,13 +121,64 @@ public class MainActivity extends AppCompatActivity{
                 startActivityForResult(add_intent, req_code);
             }
         });
-
         rvItems = (RecyclerView) findViewById(R.id.rvItems);
         adapter = new StockListAdapter(this, myList);
         rvItems.setAdapter(adapter);
         rvItems.setLayoutManager(new LinearLayoutManager(this));
         adapter.notifyDataSetChanged();
     }
+
+    public void updateData(View view) {
+        DatabaseHelper mDbHelper = new DatabaseHelper(this);
+        final SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        boolean b = false;
+
+        for (int i=0; i<myList.size(); i++) {
+            final int k = i;
+            LousListAPIInterface apiService =
+                    LousListAPIClient.getClient().create(LousListAPIInterface.class);
+            final String name = myList.get(i).getMname();
+            Call<stockkey> call = apiService.get(myList.get(i).getMname(), "OjQxNmI3YWI5MDhiYjU5ZDllMTk4MTBmZDM0YjQzZDU2");
+            call.enqueue(new Callback<stockkey>() {
+                @Override
+                public void onResponse(@NonNull Call<stockkey> call, @NonNull Response<stockkey> response) {
+                    stockkey sections = response.body();
+                    if (sections != null && !sections.getData().isEmpty()) {
+
+                        information[0] = String.valueOf(sections.getData().get(0).getHigh());
+                        information[1] = String.valueOf(sections.getData().get(0).getLow());
+                        information[2] = String.valueOf(sections.getData().get(0).getClose());
+                        if(information[0] != null) {
+                            String[] args = {name};
+                            ContentValues values = new ContentValues();
+                            values.put("currentval", information[0]);
+                            values.put("todaylow", information[1]);
+                            values.put("todayhigh", information[2]);
+                            db.update("stock", values, "name=?", args);
+                            myList.get(k).setMtodayhigh(information[0]);
+                            myList.get(k).setMtodaylow(information[1]);
+                            myList.get(k).setMcurrentprice(information[2]);
+                        }
+
+                    } else {
+                        Toast.makeText(getApplicationContext(), "The input stock name does not exist.",
+                                Toast.LENGTH_LONG).show();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<stockkey> call, Throwable t) {
+
+                }
+            });
+
+
+        }
+
+        adapter.notifyDataSetChanged();
+    };
+
     public  boolean isReadStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
             if (checkSelfPermission(android.Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -153,7 +204,9 @@ public class MainActivity extends AppCompatActivity{
                     != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
             }
+            
         }
+
 
 
     }
@@ -171,32 +224,28 @@ public class MainActivity extends AppCompatActivity{
 
         isWriteStoragePermissionGranted();
 
-
         //external storage availability check
         if (!Environment.MEDIA_MOUNTED.equals(state)) {
-            Log.e("tag11", "strrrr");
 
             return;
         }
-        Log.e("tag12", "strrrr");
+
 
 
         File file = new File(Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS), filenameExternal);
-        Log.e("tag13", "strrrr");
+
 
         FileOutputStream outputStream = null;
         try {
-            Log.e("tag14", "strrrr");
+
             //file.mkdirs();
             file.getParentFile().mkdirs();
 
             file.createNewFile();
-            Log.e("tag15", "strrrr");
 
             //second argument of FileOutputStream constructor indicates whether to append or create new file if one exists
             outputStream = new FileOutputStream(file, true);
-            Log.e("createfile", "strrrr");
 
             PrintWriter cleann = new PrintWriter(file);
             cleann.close();
@@ -207,7 +256,6 @@ public class MainActivity extends AppCompatActivity{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.e("Tag10", Environment.getExternalStorageDirectory().toString());
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
@@ -216,12 +264,10 @@ public class MainActivity extends AppCompatActivity{
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("vnd.android.cursor.dir/email");
 
-        Log.e("tag17", "sharrr");
 
         SharedPreferences email = getSharedPreferences("EmailPrefsFile", 0);
 
         String to[] = {email.getString("Email", "")};
-        Log.e("tag16", email.getString("Email", ""));
         emailIntent .putExtra(Intent.EXTRA_EMAIL, to);
 // the attachment
         emailIntent .putExtra(Intent.EXTRA_STREAM, path);
@@ -234,24 +280,26 @@ public class MainActivity extends AppCompatActivity{
 
 
     public void delete(View view) {
+        DatabaseHelper mDbHelper = new DatabaseHelper(this);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
         ArrayList<StockItem> newList = new ArrayList<StockItem>();
         for (int i = 0; i<myList.size(); i++) {
             if (myList.get(i).getMchecked()) {
+                String[] args = {myList.get(i).getMname()};
                 newList.add(myList.get(i));
+                db.delete("stock", "name=?", args);
             }
 
         }
         myList.removeAll(newList);
-        saveToDatabase();
+
         //myList = new ArrayList<StockItem>();
         //loadFromDatabase();
         adapter.notifyDataSetChanged();
 
     }
     public void downloadData(View view) {
-
-        //Log.e("tag2", "yay");
-        // Add your code here to download the data and update the screen
 
         LousListAPIInterface apiService =
                 LousListAPIClient.getClient().create(LousListAPIInterface.class);
@@ -261,7 +309,8 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onResponse(@NonNull Call<stockkey> call, @NonNull Response<stockkey> response) {
                 stockkey sections = response.body();
-                if(sections != null) {
+                if(sections != null && !sections.getData().isEmpty()) {
+                    Log.e("sections", sections.getData().toString());
                     information[0] = String.valueOf(sections.getData().get(0).getHigh());
                     information[1] = String.valueOf(sections.getData().get(0).getLow());
                     information[2] = String.valueOf(sections.getData().get(0).getClose());
@@ -284,7 +333,8 @@ public class MainActivity extends AppCompatActivity{
                     startActivityForResult(add_intent, req_code);
                 }
                 else {
-                    Toast.makeText(getApplicationContext(),"The input stock name does not exist.",
+                    Toast.makeText(getApplicationContext(),"The input stock name does not exist, make sure" +
+                                    " you are inputting stock name not company name",
                             Toast.LENGTH_LONG).show();
                 }
 
@@ -305,6 +355,9 @@ public class MainActivity extends AppCompatActivity{
         // Add code here to save to the database
         DatabaseHelper mDbHelper = new DatabaseHelper(this);
         SQLiteDatabase db = mDbHelper.getWritableDatabase();
+
+
+
         ContentValues values = new ContentValues();
         for (int i=0; i<myList.size(); i++) {
             values.put("name", myList.get(i).getMname());
@@ -342,56 +395,66 @@ public class MainActivity extends AppCompatActivity{
                 null,                                     // don't filter by row groups
                 sortOrder                                 // The sort order
         );
+
+        ArrayList<StockItem> list = new ArrayList<StockItem>();
+        //ArrayList<String> current;
+        //ArrayList<String> todayhigh;
+        //ArrayList<String> todaylow;
         while(cursor.moveToNext()) {
+
             String currID = cursor.getString(
-                    cursor.getColumnIndexOrThrow("name")
-            );
+                    cursor.getColumnIndexOrThrow("name"));
+            String currentprice = cursor.getString(
+                    cursor.getColumnIndexOrThrow("currentval"));
+            String todaylow = cursor.getString(
+                    cursor.getColumnIndexOrThrow("todaylow"));
+            String todayhigh = cursor.getString(
+                    cursor.getColumnIndexOrThrow("todayhigh"));
+            StockItem b = StockItem.createStockItem(currID, currentprice, todaylow, todayhigh, false);
+            list.add(b);
         }
-        String FILENAME = "hello_file2";
-        try {
-            FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-        }catch(Exception e) {
-            Log.e("StorageExample0", e.getMessage());
-        }
-        try {
-            FileOutputStream fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-            for (int i=0; i<myList.size(); i++) {
-                String string = myList.get(i).getMname() + " " + myList.get(i).getMcurrentprice()
-                        + " " + myList.get(i).getMtodaylow() + " " + myList.get(i).getMtodayhigh();
-                fos.write(string.getBytes());
-                fos.write("\n".getBytes());
-            }
-            fos.close();
-        }catch(Exception e) {
-            Log.e("StorageExample1", e.getMessage());
-        }
+        myList = list;
 
     }
 
     public void loadFromDatabase() {
-        String FILENAME = "hello_file2";
-        try {
-            FileInputStream fis = openFileInput(FILENAME);
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-            String line;
-            ArrayList a = new ArrayList();
-            while((line = reader.readLine()) != null){
-                a.add(line);
-            }
-            Log.e("loadfromstorage", a.toString());
-            fis.close();
-            for (int i=0; i<a.size(); i++) {
-                String[] splited = a.get(i).toString().split("\\s+");
-                Log.e("test", a.toString());
-                StockItem b = StockItem.createStockItem(splited[0], splited[1], splited[2], splited[3],false);
-                myList.add(b);
-            }
-        }catch(Exception e) {
-            File file = new File(FILENAME);
-            myList = StockItem.createInitialBucketList();
-            Log.e("StorageExample2", e.getMessage());
+        DatabaseHelper mDbHelper = new DatabaseHelper(this);
+        SQLiteDatabase db = mDbHelper.getWritableDatabase();
+        String sortOrder =
+                "name" + " DESC";
+        String[] projection = {
+                "name",
+                "currentval",
+                "todaylow",
+                "todayhigh",
+        };
 
+        Cursor cursor = db.query(
+                "stock",  // The table to query
+                projection,                               // The columns to return
+                null,                                // The columns for the WHERE clause
+                null,                            // The values for the WHERE clause
+                null,                                     // don't group the rows
+                null,                                     // don't filter by row groups
+                sortOrder                                 // The sort order
+        );
+
+        ArrayList<StockItem> list = new ArrayList<StockItem>();
+        while(cursor.moveToNext()) {
+
+            String currID = cursor.getString(
+                    cursor.getColumnIndexOrThrow("name"));
+            String currentprice = cursor.getString(
+                    cursor.getColumnIndexOrThrow("currentval"));
+            String todaylow = cursor.getString(
+                    cursor.getColumnIndexOrThrow("todaylow"));
+            String todayhigh = cursor.getString(
+                    cursor.getColumnIndexOrThrow("todayhigh"));
+            StockItem b = StockItem.createStockItem(currID, currentprice, todaylow, todayhigh, false);
+            list.add(b);
         }
+        myList = list;
+
     }
 
 
@@ -406,26 +469,20 @@ public class MainActivity extends AppCompatActivity{
                 String todaylow = data.getStringExtra("todaylow");
                 String todayhigh = data.getStringExtra("todayhigh");
                 StockItem b = StockItem.createStockItem(name, close, todaylow, todayhigh,false);
-
-
+                DatabaseHelper mDbHelper = new DatabaseHelper(this);
+                SQLiteDatabase db = mDbHelper.getWritableDatabase();
+                ContentValues values = new ContentValues();
+                values.put("name", name);
+                values.put("currentval", close);
+                values.put("todaylow", todaylow);
+                values.put("todayhigh", todayhigh);
+                db.insert("stock", "null", values);
                 myList.add(b);
-                saveToDatabase();
-                Log.e("update", b.getMcurrentprice());
                 adapter.notifyDataSetChanged();
 
             }
         }
 
-    }
-    public static void hideKeyboard(Activity activity) {
-        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
-        //Find the currently focused view, so we can grab the correct window token from it.
-        View view = activity.getCurrentFocus();
-        //If no view currently has focus, create a new one, just so we can grab a window token from it
-        if (view == null) {
-            view = new View(activity);
-        }
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }
