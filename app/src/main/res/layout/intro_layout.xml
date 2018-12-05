@@ -9,26 +9,32 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="34dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:text='Welcome to the best stock price checker app ever! E.x Search "AAPL" instead of Apple. '
-        android:textAppearance="@android:style/TextAppearance.Material.Headline"
+        android:text='Welcome to the best stock price checker app ever!'
+        android:textAlignment="center"
+        android:textAllCaps="false"
+        android:textAppearance="@android:style/TextAppearance.Material.Title"
         android:textSize="30sp"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="21dp"
-        android:layout_marginTop="223dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="296dp"
         android:text="Email Address "
         android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintRight_toLeftOf="@id/email"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -48,9 +54,10 @@
         android:id="@+id/button"
         android:layout_width="98dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="Continue"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
@@ -58,7 +65,7 @@
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
+        android:layout_marginTop="28dp"
         android:onClick="saveToSharedPreferences"
         android:text="Save Email"
         app:layout_constraintEnd_toEndOf="parent"
