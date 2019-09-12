@@ -2,7 +2,7 @@
 
 
 
-* *HELLO TO STOCK LOVERS, 
+* *HELLO TO STOCK LOVERS* *, 
 
 
 Major features:  
