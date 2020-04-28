@@ -4,8 +4,7 @@
 
 *HELLO TO STOCK LOVERS, our app aims at providing a platform for users to find stocks they like and save information about stocks. Users can register their emails to get updates on the stocks based on their preferences. They will be able to save stock they want to continue to observe, and all the stocks they have saved up should be similar to the bucket list created for our android mini-app with each stock being an item in the list.*
 
-![alt text](./wireframe-1.jpg?raw=true 'WireFrame')
-
+![alt text](https://github.com/adazhu365/Stock-Price-Checker/blob/master/wireframe-1.png 'WireFrame')
 
 
 **WHY Android:**
